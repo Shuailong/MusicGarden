@@ -3,6 +3,7 @@ var url = require("url");
 var fs = require("fs");
 var qs = require("querystring");
 
+var PREFIX = "/Projects/Github/MusicGarden"
 function start(route) {
   function onRequest(request, response) {
     var pathname = url.parse(request.url).pathname;
@@ -13,7 +14,7 @@ function start(route) {
     }
 
     // full route
-    pathname = '/www' + pathname;
+    pathname = PREFIX + pathname;
 
     var suffix = pathname.substr(pathname.length - 3);
     //route(pathname);
@@ -23,7 +24,7 @@ function start(route) {
       response.writeHead(200, {
         "Content-Type": "text/html"
       });
-      if (pathname == '/www/category.html') {
+      if (pathname == PREFIX + '/category.html') {
         var catid = qs.parse(query)["categoryid"];
         var cate_name = '';
         var cate_folder = '';
@@ -33,7 +34,7 @@ function start(route) {
         else if(catid ==2){
           cate_name = '遇见一个人的星光';
         }
-        cate_folder = '/www/data/' + cate_name + '/';
+        cate_folder = PREFIX + '/data/' + cate_name + '/';
         files = fs.readdirSync(cate_folder);
       
         var songs = [];
@@ -68,7 +69,7 @@ function start(route) {
         response.end();
       }
 
-      else if(pathname == '/www/song.html'){
+      else if(pathname == PREFIX + '/song.html'){
         // get file list
         var catid = qs.parse(query)["categoryid"];
         var cate_name = '';
@@ -79,7 +80,7 @@ function start(route) {
         else if(catid ==2){
           cate_name = '遇见一个人的星光';
         }
-        cate_folder = '/www/data/' + cate_name + '/';
+        cate_folder = PREFIX + '/data/' + cate_name + '/';
         files = fs.readdirSync(cate_folder);
         var songs = [];
         for (var i = 0; i < files.length; ++i) {
@@ -110,8 +111,8 @@ function start(route) {
         response.write(data);
         response.end();
       }
-      else if(pathname == '/www/random.html'){
-        pathname = '/www/song.html';
+      else if(pathname == PREFIX + '/random.html'){
+        pathname = PREFIX + '/song.html';
         // get file list
         var catid = Math.floor(Math.random()*2+1);
 
@@ -123,7 +124,7 @@ function start(route) {
         else if(catid ==2){
           cate_name = '遇见一个人的星光';
         }
-        cate_folder = '/www/data/' + cate_name + '/';
+        cate_folder = PREFIX + '/data/' + cate_name + '/';
         files = fs.readdirSync(cate_folder);
         var songs = [];
         for (var i = 0; i < files.length; ++i) {
