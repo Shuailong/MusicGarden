@@ -111,8 +111,10 @@
 			font-family: "微软雅黑";
 		}
 		header h4{
-			display: block;
-			height: 90px;
+			/*display: block;*/
+			height: 120px;
+			width: 100%;
+			overflow: hidden;
 		}
 
 		section p
@@ -167,6 +169,7 @@
 		.row > article
 		{
 			margin-bottom: 0;
+			margin-top: 20px;
 		}
 
 	/* Images */
@@ -189,16 +192,27 @@
 				margin: 0 0 2em 0;
 			}
 			
+			.image-index.full{
+				display: block;
+				width: 578px;
+				/*height: 384px;*/
+				height: 280px;
+				vertical-align: middle;
+				margin-bottom: 2em;
+				overflow: hidden;
+			}
+			.image-index.full:hover{
+				opacity: 0.8;
+			}
 			.image.full
 			{
 				display: block;
-				width: 100%;
+				width: 138px;
+				height: 138px;
 				margin-bottom: 2em;
 			}
-			.image1.full
-			{
-				display: block;
-				width: 100%;
+			.image.full:hover{
+				opacity: 0.8;
 			}
 			
 			.image.left
@@ -1054,4 +1068,25 @@
 
 .mt{
 	margin-top: 125px;
+}
+
+.cate_cover{
+	background-color: #f8b651;
+	width: 578px;
+	height: 280px;
+	vertical-align: middle;
+	color: #fff;
+	font-size: 60px;
+	padding-top: 100px;	
+}
+
+.song_cover{
+	background-color: #04a3ca;
+	width: 138px;
+	height: 138px;
+	color: #fff;
+	font-size: 20px;
+	padding-top: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
