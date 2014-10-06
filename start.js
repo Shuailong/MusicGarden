@@ -30,6 +30,12 @@ function getSongs(files){
   return songs;    
 }
 
+function add_relate(page){
+  
+
+  return page;
+}
+
 function start(route) {
   function onRequest(request, response) {
     // read category folder
@@ -164,6 +170,39 @@ function start(route) {
           song_lyric = fs.readFileSync('data/meta/lyrics.txt', 'UTF-8');
         }
         page = page.replace(/SONG_LYRIC/g, song_lyric);
+        
+        // add recommended songs
+        var relate_songs = [];
+        for(var i = song_id - 5; i < song_id + 6; ++i){
+          var this_song = i;
+          if(this_song != song_id){
+            if(this_song < 0){
+              this_song += songs.length;
+            }
+            if(this_song > songs.length-1){
+              this_song -= songs.length;
+            }
+            relate_songs.push(this_song);
+          }
+        }
+
+        for(var i = 0; i < 5; ++i){
+          var tuple = '<li><a href="song.html?categoryid=' + catid 
+            + '&songid=' + relate_songs[i] + '">' 
+            + songs[relate_songs[i]] + '</a></li>';
+          arr = page.split('END1');
+          page = arr[0] + tuple + 'END1' + arr[1];
+        }
+        page = page.replace('END1', '');
+
+        for(var i = 5; i < 10; ++i){
+          var tuple = '<li><a href="song.html?categoryid=' + catid 
+            + '&songid=' + relate_songs[i] + '">' 
+            + songs[relate_songs[i]] + '</a></li>';
+          arr = page.split('END2');
+          page = arr[0] + tuple + 'END2' + arr[1];
+        }
+        page = page.replace('END2', '');
       }
 
       // write back
@@ -271,7 +310,7 @@ function start(route) {
       })
     }
   }
-  http.createServer(onRequest).listen(8000);
+  http.createServer(onRequest).listen(8888);
   console.log("Server has started.");
 }
 
