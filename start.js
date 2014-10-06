@@ -174,19 +174,22 @@ function start(route) {
         // add recommended songs
         var relate_songs = [];
         for(var i = song_id - 5; i < song_id + 6; ++i){
-          var this_song = i;
-          if(this_song != song_id){
-            if(this_song < 0){
+          var this_song = i; 
+          if(this_song != song_id){         
+            while(this_song < 0){
               this_song += songs.length;
             }
-            if(this_song > songs.length-1){
-              this_song -= songs.length;
+            while(this_song > songs.length-1){
+                this_song -= songs.length;
             }
-            relate_songs.push(this_song);
+            if(!isFound(relate_songs, this_song) && this_song != song_id){
+              relate_songs.push(this_song);
+            }
           }
         }
 
-        for(var i = 0; i < 5; ++i){
+        var len = relate_songs.length < 5 ? relate_songs.length : 5;
+        for(var i = 0; i < len; ++i){
           var tuple = '<li><a href="song.html?categoryid=' + catid 
             + '&songid=' + relate_songs[i] + '">' 
             + songs[relate_songs[i]] + '</a></li>';
@@ -194,15 +197,18 @@ function start(route) {
           page = arr[0] + tuple + 'END1' + arr[1];
         }
         page = page.replace('END1', '');
-
-        for(var i = 5; i < 10; ++i){
-          var tuple = '<li><a href="song.html?categoryid=' + catid 
-            + '&songid=' + relate_songs[i] + '">' 
-            + songs[relate_songs[i]] + '</a></li>';
-          arr = page.split('END2');
-          page = arr[0] + tuple + 'END2' + arr[1];
+        len = relate_songs.length < 10 ? relate_songs.length : 10;
+        if(relate_songs.length > 5){
+          for(var i = 5; i < len; ++i){
+            var tuple = '<li><a href="song.html?categoryid=' + catid 
+              + '&songid=' + relate_songs[i] + '">' 
+              + songs[relate_songs[i]] + '</a></li>';
+            arr = page.split('END2');
+            page = arr[0] + tuple + 'END2' + arr[1];
+          }
         }
         page = page.replace('END2', '');
+
       }
 
       // write back
