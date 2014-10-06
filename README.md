@@ -3,6 +3,10 @@
 ##Introduction
 A music asset managment application developed for the DAM course in 2014.
 
+##Technology
+- Browswer end: HTML5, CSS3
+- Server end: Node.js
+
 ##Author
 Liang Shuailong(@handsome)
 
