@@ -1072,9 +1072,15 @@
 
 .cate_cover{
 	background-color: #f8b651;
+	/*
+	background:-webkit-gradient(linear, 0 0, 0 100%, from(#2074af), to(#2c91d2));
+	background:-moz-linear-gradient(top, #FFC3C8,#FF9298);
+	background: -moz-radial-gradient(#F5F5F5, #FAF0E6, #CDBE70); 
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#00ffff,endColorstr=#9fffff,grandientType=1);*/
 	width: 578px;
 	height: 280px;
 	vertical-align: middle;
+	/*color: #76EEC6;*/
 	color: #fff;
 	font-size: 60px;
 	padding-top: 100px;	

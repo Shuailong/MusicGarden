@@ -3,12 +3,42 @@ var url = require("url");
 var fs = require("fs");
 var qs = require("querystring");
 
+// Project root location
 var PREFIX = "/Projects/Github/MusicGarden";
+
+// find element in an array
+function isFound(array, element)
+{
+  var suffix = arguments[2]?arguments[2]:'';
+  for(var i=0; i<array.length; ++i){
+    if(array[i] == element + suffix){
+      return true;
+    }
+  }
+  return false;
+}
+
+// find a list of songs from files
+function getSongs(files){
+  var songs = [];
+    for (var i = 0; i < files.length; ++i) {
+      var songname = files[i].substr(0, files[i].length - 4);
+      if (!isFound(songs, songname)) {
+        songs.push(songname);
+    }
+  }  
+  return songs;    
+}
 
 function start(route) {
   function onRequest(request, response) {
+    // read category folder
+    var cates = fs.readdirSync(PREFIX + '/data/songs/');
+
+    // get pathname and query
     var pathname = url.parse(request.url).pathname;
     var query =  url.parse(request.url).query;
+
     // default route
     if (pathname == "/") {
       pathname += "index.html";
@@ -25,22 +55,24 @@ function start(route) {
       response.writeHead(200, {
         "Content-Type": "text/html"
       });
+      var page;
+      try{
+        page = fs.readFileSync(pathname, 'UTF-8');
+      }
+      catch(err){
+        console.log(err);
+        page = fs.readFileSync('error404.html', 'UTF-8');
+        response.write(page);
+        response.end();
+      }
+
       if(pathname == PREFIX + '/index.html'){
         // index
-        pathname = decodeURIComponent(pathname);
-        var data = fs.readFileSync(pathname, 'UTF-8');
-        var cates = fs.readdirSync(PREFIX + '/data/songs/');
         var images = fs.readdirSync(PREFIX + '/images/');
         for(var i = 0; i < cates.length ;++i){
           var tuple;
           
-          var j;
-          for(j = 0; j < images.length; ++j){
-            if(images[j] == cates[i] + '.jpg'){
-              break;
-            }
-          }
-          if(j == images.length){
+          if(!isFound(images, cates[i], '.jpg')){
             //tuple = '<section class="6u"><a href="category.html?categoryid=' 
             //+ i 
             //+ '" class="image-index full"><img src="data/meta/cate_cover.png" alt="CATE_NAME"></a><header><h2>CATE_NAME</h2></header><p></p></section>';
@@ -55,54 +87,24 @@ function start(route) {
           }
 
           tuple = tuple.replace(/CATE_NAME/g, cates[i]);
-          var arr = data.split('END');
-          data = arr[0] + tuple + 'END' + arr[1];
+          var arr = page.split('END');
+          page = arr[0] + tuple + 'END' + arr[1];
         }
-
-        response.write(data);
-        response.end();
+        page = page.replace(/END/g, '');
       }
       else if (pathname == PREFIX + '/category.html') {
         var catid = qs.parse(query)["categoryid"];
-        var cate_name = '';
-        var cate_folder = '';
-        var cates = fs.readdirSync(PREFIX + '/data/songs/');
-        cate_name = cates[catid];
-
-        cate_folder = PREFIX + '/data/songs/' + cate_name + '/';
-        files = fs.readdirSync(cate_folder);
-      
-        var songs = [];
-        for (var i = 0; i < files.length; ++i) {
-          var songname = files[i].substr(0, files[i].length - 4);
-          var j;
-          for (j = 0; j < songs.length; ++j) {
-            if (songname == songs[j]) {
-              break;
-            }
-          }
-          if (j == songs.length) {
-            songs.push(songname);
-          }
-        }            
-
-        pathname = decodeURIComponent(pathname);
-        var data = fs.readFileSync(pathname, 'UTF-8');
-        var res = data;
+        var cate_name = cates[catid];
+        var cate_folder = PREFIX + '/data/songs/' + cate_name + '/';
+        var files = fs.readdirSync(cate_folder);        
+        var songs = getSongs(files);
         
-        res = res.replace(/CATE_NAME/g, cate_name);
-        var count =  songs.length;
-           
-        res = res.replace(/SONGS_NUM/g, count);
+        page = page.replace(/CATE_NAME/g, cates[catid]);           
+        page = page.replace(/SONGS_NUM/g, songs.length);
+
         for (var i = 0; i < songs.length; ++i) {
           var tuple;
-          var j;
-          for(j = 0; j < files.length; ++j){
-            if(files[j] == songs[i] + '.png'){
-              break;
-            }
-          }
-          if(j == files.length){
+          if(!isFound(files, songs[i], '.png')){
             //tuple = '<section class="2u"><a href="song.html?categoryid=' 
             // + catid + '&songid=' + i + '" class="image full"><img src="data/meta/cover.png" alt="SONGNAME"></a><header><h4>SONGNAME</h4></header></section>';
              tuple = '<section class="2u"><a href="song.html?categoryid=' 
@@ -115,123 +117,45 @@ function start(route) {
              + '/SONGNAME.png" alt="SONGNAME"></a><header><h4>SONGNAME</h4></header></section>';
           }
           tuple = tuple.replace(/SONGNAME/g, songs[i]);
-
-          var arr = res.split("END");
-          res = arr[0] + tuple + "END" + arr[1];
+          var arr = page.split("END");
+          page = arr[0] + tuple + "END" + arr[1];
         }
-        response.write(res);
-        response.end();
+
+        page = page.replace(/END/g, '');
       }
 
       else if(pathname == PREFIX + '/song.html'){
-        // get file list
-        var catid = qs.parse(query)["categoryid"];
-        var cate_name = '';
-        var cate_folder = "";
-
-        var cates = fs.readdirSync(PREFIX + '/data/songs/');
-        cate_name = cates[catid];
-
-        cate_folder = PREFIX + '/data/songs/' + cate_name + '/';
-        files = fs.readdirSync(cate_folder);
-        var songs = [];
-        for (var i = 0; i < files.length; ++i) {
-          var songname = files[i].substr(0, files[i].length - 4);
-          var j;
-          for (j = 0; j < songs.length; ++j) {
-            if (songname == songs[j]) {
-              break;
-            }
-          }
-          if (j == songs.length) {
-            songs.push(songname);
-          }
-        }
-
-        var song_id = qs.parse(query)["songid"];
-        var song_name = songs[song_id];
-
-        response.writeHead(200, {
-          "Content-Type": "text/html"
-        });
-        pathname = decodeURIComponent(pathname);
-        var data = fs.readFileSync(pathname, 'UTF-8');
-
-        var i;
-          for(i = 0; i < files.length; ++i){
-            if(files[i] == songs[song_id] + '.png'){
-              break;
-            }
-          }
-          if(i == files.length){
-            data = data.replace(/songs\/CATEGORY\/SONG_COVER/g, 'meta/cover');
-          }
-          else{
-            data = data.replace(/SONG_COVER/g, song_name);
-          }
-
-        data = data.replace(/SONG_NAME/g, song_name);
-        data = data.replace(/CATEGORY/g, cate_name);
-        var song_lyric;
-        try{
-          song_lyric = fs.readFileSync('data/songs/' + cate_name + '/' + song_name + '.txt', 'UTF-8');
-        }
-        catch(err){
-          song_lyric = fs.readFileSync('data/meta/lyrics.txt', 'UTF-8');
-        }
-        data = data.replace(/SONG_LYRIC/g, song_lyric);
-        response.write(data);
-        response.end();
-      }
-      else if(pathname == PREFIX + '/random.html'){
-        pathname = PREFIX + '/song.html';
-        // get file list
-        var cates = fs.readdirSync(PREFIX + '/data/songs/');
-
-        var catid = Math.floor(Math.random()*cates.length);
-
-        var cate_name = '';
-        var cate_folder = '';
-        cate_name = cates[catid];
-        cate_folder = PREFIX + '/data/songs/' + cate_name + '/';
-        files = fs.readdirSync(cate_folder);
-        var songs = [];
-        for (var i = 0; i < files.length; ++i) {
-          var songname = files[i].substr(0, files[i].length - 4);
-          var j;
-          for (j = 0; j < songs.length; ++j) {
-            if (songname == songs[j]) {
-              break;
-            }
-          }
-          if (j == songs.length) {
-            songs.push(songname);
-          }
-        }
-
-        var song_id = Math.floor(Math.random()*songs.length);
-        var song_name = songs[song_id];
-        response.writeHead(200, {
-          "Content-Type": "text/html"
-        });
-        pathname = decodeURIComponent(pathname);
-        var data = fs.readFileSync(pathname, 'UTF-8');
-
-        var i;
-        for(i = 0; i < files.length; ++i){
-          if(files[i] == songs[song_id] + '.png'){
-            break;
-          }
-        }
-        if(i == files.length){
-          data = data.replace(/songs\/CATEGORY\/SONG_COVER/g, 'meta/cover');
+        // get category name and song name
+        var catid; 
+        var song_id;
+        if(qs.parse(query)["categoryid"]){
+          catid = qs.parse(query)["categoryid"];
         }
         else{
-          data = data.replace(/SONG_COVER/g, song_name);
+          catid = Math.floor(Math.random()*cates.length);
+        }
+        var cate_name = cates[catid];
+        var cate_folder = PREFIX + '/data/songs/' + cate_name + '/';
+        var files = fs.readdirSync(cate_folder);
+        var songs = getSongs(files);  
+
+        if(qs.parse(query)["songid"]){
+          song_id = qs.parse(query)["songid"];
+        }
+        else{
+          song_id = Math.floor(Math.random()*songs.length);
+        }
+        var song_name = songs[song_id];
+
+        if(!isFound(files, song_name, '.png')){
+          page = page.replace(/songs\/CATEGORY\/SONG_COVER/g, 'meta/cover');
+        }
+        else{
+          page = page.replace(/SONG_COVER/g, song_name);
         }
 
-        data = data.replace(/SONG_NAME/g, song_name);
-        data = data.replace(/CATEGORY/g, cate_name);
+        page = page.replace(/SONG_NAME/g, song_name);
+        page = page.replace(/CATEGORY/g, cate_name);
         var song_lyric;
         try{
           song_lyric = fs.readFileSync('data/songs/' + cate_name + '/' + song_name + '.txt', 'UTF-8');
@@ -239,34 +163,12 @@ function start(route) {
         catch(err){
           song_lyric = fs.readFileSync('data/meta/lyrics.txt', 'UTF-8');
         }
-        data = data.replace(/SONG_LYRIC/g, song_lyric);
-        response.write(data);
-        response.end();
+        page = page.replace(/SONG_LYRIC/g, song_lyric);
       }
-      else if(pathname == PREFIX + '/about.html'){
-        // about page
-        pathname = decodeURIComponent(pathname);
-        fs.readFile(pathname, 'UTF-8', function(err, data) {
-          if (err) {
-            console.log(err);
-          } else {
-            response.write(data);
-            response.end();
-          }
-        })
-      }
-      else{
-        // other html files
-        pathname = 'error404.html';
-        fs.readFile(pathname, 'UTF-8', function(err, data) {
-          if (err) {
-            console.log(err);
-          } else {
-            response.write(data);
-            response.end();
-          }
-        })
-      }
+
+      // write back
+      response.write(page);
+      response.end();
     }
 
     else if (suffix == ".js") {
