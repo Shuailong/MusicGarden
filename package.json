@@ -1,0 +1,21 @@
+{
+  "name": "MusicGarden",
+  "version": "0.0.1",
+  "description": "A music management app based on Node.js and html5 for Digital Media Management course.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://coding.net/handsome/MusicGarden.git"
+  },
+  "keywords": [
+    "music",
+    "management",
+    "nodejs",
+    "html5"
+  ],
+  "author": "Liang Shuailong",
+  "license": "GPL v3"
+}

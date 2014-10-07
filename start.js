@@ -316,7 +316,7 @@ function start(route) {
       })
     }
   }
-  http.createServer(onRequest).listen(80);
+  http.createServer(onRequest).listen(process.env.VCAP_APP_PORT || 80, null);
   console.log("Server has started.");
 }
 
