@@ -21,13 +21,20 @@ build/Release
 
 # Dependency directory
 # Commenting this out is preferred by some people, see
+<<<<<<< HEAD
 # https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
+=======
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
+>>>>>>> 2975fb4218343c08258c57851371ce52f8a1fee4
 node_modules
 
 # Users Environment Variables
 .lock-wscript
+<<<<<<< HEAD
 
 # not sync data files
 data/songs
 
 素材
+=======
+>>>>>>> 2975fb4218343c08258c57851371ce52f8a1fee4
