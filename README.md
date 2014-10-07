@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #MusicGarden
 
 ###Introduction
@@ -33,9 +32,4 @@ zju_shuailong@163.com
 
 ###Preview
 ![Music Garden](./images/Preview.PNG "Music Garden")
-=======
-MusicGarden
-===========
 
-A music management app based on Node.js and html5 for Digital Media Management course.
->>>>>>> 2975fb4218343c08258c57851371ce52f8a1fee4
