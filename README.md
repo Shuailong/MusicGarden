@@ -31,4 +31,4 @@ zju_shuailong@163.com
 9. 播放列表
 
 ###Preview
-![Music Garden](./images/Preview.PNG "Music Garden")
+![Music Garden](./images/preview.png "Music Garden")

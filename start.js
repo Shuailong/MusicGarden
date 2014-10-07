@@ -114,11 +114,11 @@ function start(route) {
             //tuple = '<section class="2u"><a href="song.html?categoryid=' 
             // + catid + '&songid=' + i + '" class="image full"><img src="data/meta/cover.png" alt="SONGNAME"></a><header><h4>SONGNAME</h4></header></section>';
              tuple = '<section class="2u"><a href="song.html?categoryid=' 
-             + catid + '&songid=' + i + '" class="image full"><div class="song_cover">SONGNAME</div></a><header><h4>SONGNAME</h4></header></section>';
+             + catid + '&songid=' + i + '" class="image full"><div class="song_cover" title="SONGNAME">SONGNAME</div></a><header><h4>SONGNAME</h4></header></section>';
           }
           else{
             tuple = '<section class="2u"><a href="song.html?categoryid=' 
-             + catid + '&songid=' + i + '" class="image full"><img src="data/songs/'
+             + catid + '&songid=' + i + '" class="image full"><img alt="SONGNAME" title="SONGNAME" src="data/songs/'
              + cate_name 
              + '/SONGNAME.png" alt="SONGNAME"></a><header><h4>SONGNAME</h4></header></section>';
           }
@@ -316,7 +316,7 @@ function start(route) {
       })
     }
   }
-  http.createServer(onRequest).listen(8888);
+  http.createServer(onRequest).listen(80);
   console.log("Server has started.");
 }
 

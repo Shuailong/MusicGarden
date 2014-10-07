@@ -23,6 +23,20 @@
 		<link rel="stylesheet" href="./css/skel-noscript.css" />
 		<link rel="stylesheet" href="./css/style.css" />
 		<link rel="stylesheet" href="./css/style-desktop.css" />
+
+		<script>
+			$(document).ready(function(){
+				$('.w-top').hide();
+				$(window).scroll(function(){
+					if($(document).scrollTop() > 600){
+						$('.w-top').fadeIn(1000);
+					}
+					else{
+						$('.w-top').fadeOut(1000);
+					}
+				});
+			});
+		</script>
 		
 	</head>
 	<body class="homepage">
@@ -93,11 +107,15 @@
 			</div>
 		</div>
 
-	<!-- Copyright -->
+		<!-- Copyright -->
 		<div id="copyright">
 			<div class="container">
 				Design: <a href="http://templated.co">TEMPLATED</a> Images: <a href="http://unsplash.com">Unsplash</a> (<a href="http://unsplash.com/cc0">CC0</a>) Adaption: <a href="http://harmonycool.lofter.com/">Liang Shuailong</a> for <a href="http://www.cad.zju.edu.cn/home/zhx/DAM/2014/doku.php">DAM course</a>.
 			</div>
+		</div>
+
+		<div>
+			<a title="回到顶部" class="w-top" href="#" id="gtotop" hidefocus="true"><img src="/images/up_arrow.png"></a>
 		</div>
 
 	</body>

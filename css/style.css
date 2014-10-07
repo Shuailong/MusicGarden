@@ -1096,3 +1096,13 @@
 	padding-left: 10px;
 	padding-right: 10px;
 }
+
+.w-top {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    z-index: 79;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+}
