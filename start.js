@@ -2,9 +2,10 @@ var http = require("http");
 var url = require("url");
 var fs = require("fs");
 var qs = require("querystring");
+var path = require("path");
 
 // Project root location
-var PREFIX = "/Projects/Github/MusicGarden";
+//var PREFIX = "/Projects/Github/MusicGarden";
 
 // find element in an array
 function isFound(array, element)
@@ -30,17 +31,10 @@ function getSongs(files){
   return songs;    
 }
 
-function add_relate(page){
-  
-
-  return page;
-}
-
 function start(route) {
   function onRequest(request, response) {
     // read category folder
-    var cates = fs.readdirSync(PREFIX + '/data/songs/');
-
+    var cates = fs.readdirSync(path.join(process.cwd(), '/data/songs/'));
     // get pathname and query
     var pathname = url.parse(request.url).pathname;
     var query =  url.parse(request.url).query;
@@ -51,7 +45,7 @@ function start(route) {
     }
 
     // full route
-    pathname = PREFIX + pathname;
+    pathname = path.join(process.cwd(), pathname);
 
     var suffix = pathname.substr(pathname.length - 3);
     //route(pathname);
@@ -72,9 +66,10 @@ function start(route) {
         response.end();
       }
 
-      if(pathname == PREFIX + '/index.html'){
+      if(pathname == path.join(process.cwd(), '/index.html')){
         // index
-        var images = fs.readdirSync(PREFIX + '/images/');
+        var images = fs.readdirSync(path.join(process.cwd(),'/images/'));
+
         for(var i = 0; i < cates.length ;++i){
           var tuple;
           
@@ -97,11 +92,12 @@ function start(route) {
           page = arr[0] + tuple + 'END' + arr[1];
         }
         page = page.replace(/END/g, '');
+        
       }
-      else if (pathname == PREFIX + '/category.html') {
+      else if (pathname == path.join(process.cwd(), '/category.html')){
         var catid = qs.parse(query)["categoryid"];
         var cate_name = cates[catid];
-        var cate_folder = PREFIX + '/data/songs/' + cate_name + '/';
+        var cate_folder = path.join(process.cwd(), '/data/songs/', cate_name);
         var files = fs.readdirSync(cate_folder);        
         var songs = getSongs(files);
         
@@ -130,7 +126,7 @@ function start(route) {
         page = page.replace(/END/g, '');
       }
 
-      else if(pathname == PREFIX + '/song.html'){
+      else if(pathname == path.join(process.cwd(), '/song.html')){
         // get category name and song name
         var catid; 
         var song_id;
@@ -141,7 +137,7 @@ function start(route) {
           catid = Math.floor(Math.random()*cates.length);
         }
         var cate_name = cates[catid];
-        var cate_folder = PREFIX + '/data/songs/' + cate_name + '/';
+        var cate_folder = path.join(process.cwd(), '/data/songs/', cate_name);
         var files = fs.readdirSync(cate_folder);
         var songs = getSongs(files);  
 
