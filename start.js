@@ -4,9 +4,6 @@ var fs = require("fs");
 var qs = require("querystring");
 var path = require("path");
 
-// Project root location
-//var PREFIX = "/Projects/Github/MusicGarden";
-
 // find element in an array
 function isFound(array, element)
 {
@@ -60,15 +57,21 @@ function start(route) {
         page = fs.readFileSync(pathname, 'UTF-8');
       }
       catch(err){
-        console.log(err);
-        page = fs.readFileSync('error404.html', 'UTF-8');
+        page = fs.readFileSync(path.join(process.cwd(), '/error404.html'), 'UTF-8');
         response.write(page);
         response.end();
       }
 
       if(pathname == path.join(process.cwd(), '/index.html')){
         // index
-        var images = fs.readdirSync(path.join(process.cwd(),'/images/'));
+        var images;
+        try{
+          images = fs.readdirSync(path.join(process.cwd(),'/images/'));
+        }
+        catch(err){
+          response.write(err);
+          response.end();
+        }
 
         for(var i = 0; i < cates.length ;++i){
           var tuple;
@@ -98,7 +101,14 @@ function start(route) {
         var catid = qs.parse(query)["categoryid"];
         var cate_name = cates[catid];
         var cate_folder = path.join(process.cwd(), '/data/songs/', cate_name);
-        var files = fs.readdirSync(cate_folder);        
+        var files;
+        try{
+          files = fs.readdirSync(cate_folder);        
+        }
+        catch(err){
+          response.write(err);
+          response.end();
+        }
         var songs = getSongs(files);
         
         page = page.replace(/CATE_NAME/g, cates[catid]);           
@@ -138,7 +148,15 @@ function start(route) {
         }
         var cate_name = cates[catid];
         var cate_folder = path.join(process.cwd(), '/data/songs/', cate_name);
-        var files = fs.readdirSync(cate_folder);
+
+        var files;
+        try{
+          files = fs.readdirSync(cate_folder);
+        }
+        catch(err){
+          response.write(err);
+          response.end();
+        }
         var songs = getSongs(files);  
 
         if(qs.parse(query)["songid"]){
@@ -160,10 +178,10 @@ function start(route) {
         page = page.replace(/CATEGORY/g, cate_name);
         var song_lyric;
         try{
-          song_lyric = fs.readFileSync('data/songs/' + cate_name + '/' + song_name + '.txt', 'UTF-8');
+          song_lyric = fs.readFileSync(path.join(process.cwd(), 'data/songs/', cate_name, song_name + '.txt'), 'UTF-8');
         }
         catch(err){
-          song_lyric = fs.readFileSync('data/meta/lyrics.txt', 'UTF-8');
+          song_lyric = fs.readFileSync(path.join(process.cwd(), 'data/meta/lyrics.txt'), 'UTF-8');
         }
         page = page.replace(/SONG_LYRIC/g, song_lyric);
         
