@@ -1,24 +1,24 @@
-#MusicGarden
+# MusicGarden
 
-###Introduction
+### Introduction
 A music asset managment application developed for the DAM course in 2014.
 
-###Technology
+### Technology
 - Browswer end: HTML5, CSS3
 - Server end: Node.js
 
-###Author
+### Author
 Liang Shuailong(@handsome)
 
 zju_shuailong@163.com
 
-###Feature
+### Feature
 1. Auto generate catelog page for songs files with 'mp3' format.
 2. Support playing a random song in your song library.
 3. Show similar songs in your song playing page.
 4. Support customised album cover and category cover.
 
-###TODO
+### TODO
 1. [Done]类别以及简介的自动生成
 2. [Done]异常处理（数据缺失、404错误等?）
 3. [Done]修复Footer缺失的BUG
@@ -30,6 +30,6 @@ zju_shuailong@163.com
 8. 色块颜色随机化
 9. 播放列表
 
-###Preview
+### Preview
 ![Music Garden](./images/Preview.PNG "Music Garden")
 
